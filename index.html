@@ -3,11 +3,47 @@
 
 <head>
     <script src="https://cdn.tailwindcss.com"></script>
+    <title>Tech Products</title>
 </head>
 
-<body class="bg-gray-100 p-8">
-    <h1 class="text-3xl font-bold mb-6">Tech Products</h1>
-    <div id="products" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+<body class="bg-slate-900 min-h-screen text-white">
+
+    <!-- HEADER -->
+    <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-8 shadow-xl">
+        <h1 class="text-4xl font-bold">Tech Products Admin</h1>
+        <p class="text-indigo-100 mt-2">Manage your inventory with style</p>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 py-10">
+
+        <!-- ADD PRODUCT CARD -->
+        <div class="bg-slate-800 rounded-2xl shadow-2xl p-6 mb-10 border border-slate-700">
+            <h2 class="text-2xl font-semibold mb-6">Add Product</h2>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <input id="new-name" placeholder="Product Name"
+                    class="bg-slate-900 border border-slate-600 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
+
+                <input id="new-price" type="number" placeholder="Price"
+                    class="bg-slate-900 border border-slate-600 rounded-lg p-3 focus:ring-2 focus:ring-indigo-500 outline-none">
+
+                <textarea id="new-desc" placeholder="Description"
+                    class="bg-slate-900 border border-slate-600 rounded-lg p-3 md:col-span-2 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
+
+                <input id="new-image" placeholder="Image URL"
+                    class="bg-slate-900 border border-slate-600 rounded-lg p-3 md:col-span-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+            </div>
+
+            <button onclick="addProduct()"
+                class="mt-6 bg-indigo-600 hover:bg-indigo-700 px-6 py-3 rounded-xl font-semibold transition duration-200">
+                Add Product
+            </button>
+        </div>
+
+        <!-- PRODUCTS GRID -->
+        <div id="products" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+
+    </div>
 
     <script>
         const API = "https://tech-products-api.yyupanquij.workers.dev/products";
@@ -21,35 +57,37 @@
 
             products.forEach(product => {
                 container.innerHTML += `
-            <div class="bg-white p-4 rounded shadow mb-6">
-                <h2 class="text-xl font-bold mb-3">Add Product</h2>
-                <input id="new-name" placeholder="Name" class="w-full border p-2 mb-2">
-                <textarea id="new-desc" placeholder="Description" class="w-full border p-2 mb-2"></textarea>
-                <input id="new-price" type="number" placeholder="Price" class="w-full border p-2 mb-2">
-                <input id="new-image" placeholder="Image URL" class="w-full border p-2 mb-2">
-                <button onclick="addProduct()" class="bg-green-500 text-white px-4 py-2 rounded">
-                    Add Product
-                </button>
-            </div>
-      <div class="bg-white p-4 rounded shadow">
-        <img src="${product.image}" class="h-40 w-full object-cover rounded mb-3">
-        <input value="${product.name}" id="name-${product.id}" class="w-full border p-1 mb-2">
-        <textarea id="desc-${product.id}" class="w-full border p-1 mb-2">${product.description}</textarea>
-        <input value="${product.price}" id="price-${product.id}" type="number" class="w-full border p-1 mb-2">
-        <input value="${product.image}" id="img-${product.id}" class="w-full border p-1 mb-2">
-        
-        <div class="flex gap-2">
-          <button onclick="save(${product.id})"
-            class="bg-blue-500 text-white px-3 py-1 rounded">
-            Save
-          </button>
-          <button onclick="deleteProduct(${product.id})"
-            class="bg-red-500 text-white px-3 py-1 rounded">
-            Delete
-          </button>
-        </div>
-      </div>
-    `;
+                    <div class="bg-slate-800 rounded-2xl shadow-xl border border-slate-700 overflow-hidden hover:scale-[1.02] transition duration-300">
+
+                        <img src="${product.image}" class="h-48 w-full object-cover">
+
+                        <div class="p-5">
+                            <input value="${product.name}" id="name-${product.id}"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 mb-3">
+
+                            <textarea id="desc-${product.id}"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 mb-3">${product.description}</textarea>
+
+                            <input value="${product.price}" id="price-${product.id}" type="number"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 mb-3">
+
+                            <input value="${product.image}" id="img-${product.id}"
+                                class="w-full bg-slate-900 border border-slate-600 rounded-lg p-2 mb-4">
+
+                            <div class="flex gap-3">
+                                <button onclick="save(${product.id})"
+                                    class="flex-1 bg-indigo-600 hover:bg-indigo-700 py-2 rounded-lg font-medium transition">
+                                    Save
+                                </button>
+
+                                <button onclick="deleteProduct(${product.id})"
+                                    class="flex-1 bg-red-600 hover:bg-red-700 py-2 rounded-lg font-medium transition">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
         }
 
@@ -78,7 +116,6 @@
             loadProducts();
         }
 
-        loadProducts();
         async function addProduct() {
             const data = {
                 name: document.getElementById("new-name").value,
@@ -87,15 +124,22 @@
                 image: document.getElementById("new-image").value,
             };
 
-            await fetch("https://tech-products-api.yyupanquij.workers.dev/products", {
+            await fetch(API, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             });
 
+            document.getElementById("new-name").value = "";
+            document.getElementById("new-desc").value = "";
+            document.getElementById("new-price").value = "";
+            document.getElementById("new-image").value = "";
+
             loadProducts();
         }
-    </script>
-</body>
 
+        loadProducts();
+    </script>
+
+</body>
 </html>
