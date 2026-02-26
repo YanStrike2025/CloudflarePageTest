@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+  <h1 class="text-3xl font-bold mb-6">Tech Products</h1>
+  <div id="products" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+
+<script>
+const API = "https://tech-products-api.yyupanquij.workers.dev/products";
+
+async function loadProducts() {
+  const res = await fetch(API);
+  const products = await res.json();
+
+  const container = document.getElementById("products");
+  container.innerHTML = "";
+
+  products.forEach(product => {
+    container.innerHTML += `
+      <div class="bg-white p-4 rounded shadow">
+        <img src="${product.image}" class="h-40 w-full object-cover rounded mb-3">
+        <input value="${product.name}" id="name-${product.id}" class="w-full border p-1 mb-2">
+        <textarea id="desc-${product.id}" class="w-full border p-1 mb-2">${product.description}</textarea>
+        <input value="${product.price}" id="price-${product.id}" type="number" class="w-full border p-1 mb-2">
+        <input value="${product.image}" id="img-${product.id}" class="w-full border p-1 mb-2">
+        
+        <div class="flex gap-2">
+          <button onclick="save(${product.id})"
+            class="bg-blue-500 text-white px-3 py-1 rounded">
+            Save
+          </button>
+          <button onclick="deleteProduct(${product.id})"
+            class="bg-red-500 text-white px-3 py-1 rounded">
+            Delete
+          </button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+async function save(id) {
+  const data = {
+    name: document.getElementById(`name-${id}`).value,
+    description: document.getElementById(`desc-${id}`).value,
+    price: document.getElementById(`price-${id}`).value,
+    image: document.getElementById(`img-${id}`).value,
+  };
+
+  await fetch(API + "/" + id, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  alert("Saved!");
+}
+
+async function deleteProduct(id) {
+  await fetch(API + "/" + id, {
+    method: "DELETE"
+  });
+
+  loadProducts();
+}
+
+loadProducts();
+</script>
+</body>
+</html>
