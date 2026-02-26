@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 p-8">
-  <h1 class="text-3xl font-bold mb-6">Tech Products</h1>
-  <div id="products" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    <h1 class="text-3xl font-bold mb-6">Tech Products</h1>
+    <div id="products" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
 
-<script>
-const API = "https://tech-products-api.yyupanquij.workers.dev/products";
+    <script>
+        const API = "https://tech-products-api.yyupanquij.workers.dev/products";
 
-async function loadProducts() {
-  const res = await fetch(API);
-  const products = await res.json();
+        async function loadProducts() {
+            const res = await fetch(API);
+            const products = await res.json();
 
-  const container = document.getElementById("products");
-  container.innerHTML = "";
+            const container = document.getElementById("products");
+            container.innerHTML = "";
 
-  products.forEach(product => {
-    container.innerHTML += `
+            products.forEach(product => {
+                container.innerHTML += `
+            <div class="bg-white p-4 rounded shadow mb-6">
+                <h2 class="text-xl font-bold mb-3">Add Product</h2>
+                <input id="new-name" placeholder="Name" class="w-full border p-2 mb-2">
+                <textarea id="new-desc" placeholder="Description" class="w-full border p-2 mb-2"></textarea>
+                <input id="new-price" type="number" placeholder="Price" class="w-full border p-2 mb-2">
+                <input id="new-image" placeholder="Image URL" class="w-full border p-2 mb-2">
+                <button onclick="addProduct()" class="bg-green-500 text-white px-4 py-2 rounded">
+                    Add Product
+                </button>
+            </div>
       <div class="bg-white p-4 rounded shadow">
         <img src="${product.image}" class="h-40 w-full object-cover rounded mb-3">
         <input value="${product.name}" id="name-${product.id}" class="w-full border p-1 mb-2">
@@ -38,35 +50,52 @@ async function loadProducts() {
         </div>
       </div>
     `;
-  });
-}
+            });
+        }
 
-async function save(id) {
-  const data = {
-    name: document.getElementById(`name-${id}`).value,
-    description: document.getElementById(`desc-${id}`).value,
-    price: document.getElementById(`price-${id}`).value,
-    image: document.getElementById(`img-${id}`).value,
-  };
+        async function save(id) {
+            const data = {
+                name: document.getElementById(`name-${id}`).value,
+                description: document.getElementById(`desc-${id}`).value,
+                price: document.getElementById(`price-${id}`).value,
+                image: document.getElementById(`img-${id}`).value,
+            };
 
-  await fetch(API + "/" + id, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+            await fetch(API + "/" + id, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
 
-  alert("Saved!");
-}
+            alert("Saved!");
+        }
 
-async function deleteProduct(id) {
-  await fetch(API + "/" + id, {
-    method: "DELETE"
-  });
+        async function deleteProduct(id) {
+            await fetch(API + "/" + id, {
+                method: "DELETE"
+            });
 
-  loadProducts();
-}
+            loadProducts();
+        }
 
-loadProducts();
-</script>
+        loadProducts();
+        async function addProduct() {
+            const data = {
+                name: document.getElementById("new-name").value,
+                description: document.getElementById("new-desc").value,
+                price: document.getElementById("new-price").value,
+                image: document.getElementById("new-image").value,
+            };
+
+            await fetch("https://tech-products-api.yyupanquij.workers.dev/products", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(data)
+            });
+
+            loadProducts();
+        }
+    </script>
 </body>
+
 </html>
