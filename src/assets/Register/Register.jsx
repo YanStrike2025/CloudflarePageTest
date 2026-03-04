@@ -40,8 +40,7 @@ function Register() {
         throw new Error(data.error || 'Registration failed');
       }
 
-      navigate('/'); // vuelve al login
-
+      navigate('/');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -51,14 +50,20 @@ function Register() {
 
   return (
     <div className="register-container">
-      <form className="register-card" onSubmit={handleRegister}>
+      <form
+        className="register-card"
+        onSubmit={handleRegister}
+        autoComplete="on"
+      >
         <h2>Create Account</h2>
 
         {error && <p className="error">{error}</p>}
 
         <input
           type="email"
+          name="email"
           placeholder="Email"
+          autoComplete="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -66,7 +71,9 @@ function Register() {
 
         <input
           type="password"
+          name="password"
           placeholder="Password"
+          autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -74,7 +81,9 @@ function Register() {
 
         <input
           type="password"
+          name="confirmPassword"
           placeholder="Confirm Password"
+          autoComplete="new-password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           required
