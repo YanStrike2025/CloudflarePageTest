@@ -54,6 +54,9 @@ function Loggin() {
         />
 
         <button type="submit">Login</button>
+        <p onClick={() => navigate('/register')} style={{ cursor: 'pointer' }}>
+          Create account
+        </p>
       </form>
     </div>
   );
