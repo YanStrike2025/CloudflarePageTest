@@ -49,7 +49,6 @@ function Register() {
       alert('Network error');
     }
 
-    // smooth UX loading
     const elapsed = Date.now() - start;
 
     if (elapsed < 800) {
@@ -70,13 +69,21 @@ function Register() {
       )}
 
       <div className={`login-container ${loading ? 'blurred' : ''}`}>
-        <form className="login-card" onSubmit={handleRegister}>
+        <form
+          className="login-card"
+          onSubmit={handleRegister}
+          autoComplete="off"
+        >
           <h2>Create Account</h2>
           <p className="subtitle">Register to continue</p>
 
           <input
             type="email"
+            name="user_email_register"
             placeholder="Email"
+            autoComplete="off"
+            autoCapitalize="off"
+            spellCheck="false"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -85,7 +92,9 @@ function Register() {
 
           <input
             type="password"
+            name="user_password_register"
             placeholder="Password"
+            autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -94,7 +103,9 @@ function Register() {
 
           <input
             type="password"
+            name="user_confirm_password_register"
             placeholder="Confirm Password"
+            autoComplete="new-password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
