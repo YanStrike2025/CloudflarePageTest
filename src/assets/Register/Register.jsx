@@ -3,24 +3,26 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 function Register() {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError('');
+
+    if (loading) return;
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      alert("Passwords don't match");
       return;
     }
 
     setLoading(true);
+
+    const start = Date.now();
 
     try {
       const res = await fetch(
@@ -36,68 +38,81 @@ function Register() {
 
       const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.error || 'Registration failed');
+      if (res.ok) {
+        alert('Account created successfully');
+        navigate('/');
+      } else {
+        alert(data.error || 'Registration failed');
       }
 
-      navigate('/');
     } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+      alert('Network error');
     }
+
+    // smooth UX loading
+    const elapsed = Date.now() - start;
+
+    if (elapsed < 800) {
+      await new Promise((r) => setTimeout(r, 800 - elapsed));
+    }
+
+    setLoading(false);
   };
 
   return (
-    <div className="register-container">
-      <form
-        className="register-card"
-        onSubmit={handleRegister}
-        autoComplete="on"
-      >
-        <h2>Create Account</h2>
+    <div className="login-wrapper">
 
-        {error && <p className="error">{error}</p>}
+      {loading && (
+        <div className="loading-overlay">
+          <div className="loader"></div>
+          <p>Creating account...</p>
+        </div>
+      )}
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          autoComplete="username"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+      <div className={`login-container ${loading ? 'blurred' : ''}`}>
+        <form className="login-card" onSubmit={handleRegister}>
+          <h2>Create Account</h2>
+          <p className="subtitle">Register to continue</p>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          autoComplete="new-password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={loading}
+          />
 
-        <input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          autoComplete="new-password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            disabled={loading}
+          />
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creating...' : 'Register'}
-        </button>
+          <input
+            type="password"
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            disabled={loading}
+          />
 
-        <p className="login-link">
-          Already have an account?{' '}
-          <span onClick={() => navigate('/')}>Login</span>
-        </p>
-      </form>
+          <button type="submit" disabled={loading}>
+            Register
+          </button>
+
+          <p
+            className="register-link"
+            onClick={() => !loading && navigate('/')}
+          >
+            Back to login
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
