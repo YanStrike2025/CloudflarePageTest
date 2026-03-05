@@ -42,11 +42,6 @@
   transition: 0.4s ease;
 }
 
-.register-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-}
-
 /* Title */
 .register-card h2 {
   text-align: center;
@@ -95,7 +90,7 @@
 
 /* Button hover */
 .register-card button:hover:not(:disabled) {
-  transform: translateY(-3px);
+  transform: translateY(-1.5px);
   box-shadow: 0 10px 25px rgba(236, 72, 153, 0.5);
 }
 
