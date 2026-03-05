@@ -25,13 +25,13 @@
 }
 
 .home-container::before {
-  background: #0ea5e9;
+  background: #1086bd;
   top: -100px;
   left: -100px;
 }
 
 .home-container::after {
-  background: #6366f1;
+  background: #595bd1;
   bottom: -100px;
   right: -100px;
 }
