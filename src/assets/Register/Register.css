@@ -8,7 +8,7 @@
     -45deg,
     #0f172a,
     #1e1b4b,
-    #7c3aed,
+    #5529a2,
     #ec4899
   );
   background-size: 400% 400%;
@@ -68,7 +68,7 @@
 }
 
 .register-card input:focus {
-  border: 1px solid #7c3aed;
+  border: 1px solid #6730c6;
   box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
   background: rgba(255, 255, 255, 0.12);
 }
@@ -84,7 +84,7 @@
   letter-spacing: 0.5px;
   cursor: pointer;
   color: white;
-  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  background: linear-gradient(135deg, #5826ae, #ec4899);
   transition: all 0.3s ease;
 }
 
